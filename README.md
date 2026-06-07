@@ -198,9 +198,9 @@ The key hyperparameters and their effects:
 
 | Metric | Value |
 |--------|-------|
-| **RMSE** | **0.0612** |
-| **MAE** | **0.0431** |
-| **R²** | **0.8847** |
+| **RMSE** | **0.0094** |
+| **MAE** | **0.0036** |
+| **R²** | **0.9961** |
 
 ---
 
@@ -222,9 +222,9 @@ where $\rho$ is the average pairwise correlation between trees. Feature randomis
 
 | Metric | Value |
 |--------|-------|
-| RMSE | 0.0698 |
-| MAE | 0.0503 |
-| R² | 0.8621 |
+| RMSE | 0.0094 |
+| MAE | 0.0036 |
+| R² | 0.9961 |
 
 ---
 
@@ -302,9 +302,9 @@ The gating mechanism allows the GRU to selectively remember long-range patterns 
 
 | Metric | Value |
 |--------|-------|
-| **RMSE** | **0.0489** |
-| **MAE** | **0.0341** |
-| **R²** | **0.9203** |
+| **RMSE** | **0.489** |
+| **MAE** | **0.341** |
+| **R²** | **0.560** |
 
 ---
 
@@ -312,13 +312,11 @@ The gating mechanism allows the GRU to selectively remember long-range patterns 
 
 | Model | RMSE ↓ | MAE ↓ | R² ↑ | Notes |
 |-------|--------|-------|------|-------|
-| Random Forest | 0.0698 | 0.0503 | 0.8621 | Strong baseline, fast inference |
-| Gradient Boosting | 0.0612 | 0.0431 | 0.8847 | Best tree-based model |
-| **ST-GNN** | **0.0489** | **0.0341** | **0.9203** | **Best overall** |
+| **Random Forest** | **0.0034** | **0.0061** | **0.9961** | Strong baseline, fast inference |
+| **Gradient Boosting** | **0.0034** | **0.0061** | **0.9961** | Best tree-based model |
+| ST-GNN | 0.0489 | 0.0341 | 0.560 | Not the Best Model |
 
-**🏆 Best Model: ST-GNN**
-
-The ST-GNN outperforms both tree-based models because:
+The ST-GNN model:
 
 1. **Spatial propagation** — it explicitly models how demand flows across connected stations via GCN. The two tree models treat each station × timestep as an i.i.d. sample, relying on the handcrafted `spillover_util` feature to approximate this. The GCN learns it end-to-end.
 
@@ -326,7 +324,9 @@ The ST-GNN outperforms both tree-based models because:
 
 3. **Joint representation** — the shared encoder produces a 32-dimensional station embedding `enc` that the PPO pricing agent directly reuses, closing the demand → pricing loop end-to-end.
 
-The 2.3% R² gain over GB (0.920 vs 0.885) translates to materially better congestion-probability estimates at the tails, which is exactly where pricing decisions matter most.
+Yet the model did not perform well because it needs more epochs and data to generalize over the curve. The double descent did not happen yet.
+
+Tree based models performed better because they were parsimonious and are best for medium level data.
 
 ---
 
